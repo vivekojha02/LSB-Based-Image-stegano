@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSB Image Steganography</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Background video -->
+    <div class="background-video">
+        <video autoplay muted loop id="bgVideo">
+            <source src="/static/background.mp4" type="video/mp4">
+            <!-- Backup background color if video fails to load -->
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="container">
+        <h1>LSB BASED IMAGE STEGANOGRAPHY PROJECT</h1>
+        
+        <div class="form-section">
+            <!-- Image Upload -->
+            <input type="file" id="imageUpload" accept="image/*" onchange="checkInputs()">
+            
+            <!-- Message Input -->
+            <textarea id="messageInput" placeholder="Enter your message here" oninput="checkInputs()"></textarea>
+
+            <!-- Password Toggle -->
+            <label>
+                <input type="checkbox" id="passwordToggle" onchange="togglePasswordInput()"> Add Password
+            </label>
+            
+            <!-- Password Input (Hidden by default) -->
+            <input type="password" id="passwordInput" placeholder="Enter password" style="display: none;" oninput="checkInputs()">
+            
+            <!-- Encode and Decode Buttons -->
+            <div class="button-section">
+                <button id="encodeButton" onclick="encodeMessage()" disabled>Encode Message</button>
+                <button id="decodeButton" onclick="decodeMessage()">Decode Message</button>
+            </div>
+        </div>
+        
+        <p class="footer">😎 </p>
+    </div>
+    
+    <script>
+        // Show or hide the password input based on the checkbox
+        function togglePasswordInput() {
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordToggle = document.getElementById('passwordToggle').checked;
+            passwordInput.style.display = passwordToggle ? "block" : "none";
+            checkInputs();
+        }
+
+        // Enable the encode button only if required conditions are met
+        function checkInputs() {
+            const fileInput = document.getElementById('imageUpload').files[0];
+            const message = document.getElementById('messageInput').value;
+            const passwordToggle = document.getElementById('passwordToggle').checked;
+            const passwordInput = document.getElementById('passwordInput').value;
+            const encodeButton = document.getElementById('encodeButton');
+
+            // Enable Encode button if:
+            // - Image and message are provided, and
+            // - If password is required, it's also provided
+            encodeButton.disabled = !(fileInput && message && (!passwordToggle || (passwordToggle && passwordInput)));
+        }
+
+        function encodeMessage() {
+            const fileInput = document.getElementById('imageUpload').files[0];
+            const message = document.getElementById('messageInput').value;
+            const password = document.getElementById('passwordToggle').checked ? document.getElementById('passwordInput').value : "";
+
+            const formData = new FormData();
+            formData.append("image", fileInput);
+            formData.append("message", message);
+            formData.append("password", password);
+
+            fetch("/encode", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "encoded_image.png";
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                alert("Message encoded successfully!");
+                clearInputs(); // Clear inputs after encoding
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function decodeMessage() {
+            const fileInput = document.getElementById('imageUpload').files[0];
+            const password = document.getElementById('passwordToggle').checked ? document.getElementById('passwordInput').value : "";
+
+            if (!fileInput) {
+                alert("Please upload an image.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("image", fileInput);
+            formData.append("password", password);
+
+            fetch("/decode", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(text => {
+                if (text === "incorrect password") {
+                    alert("Incorrect Password");
+                } else {
+                    alert("Decoded Message: " + text);
+                }
+                clearInputs(); // Clear inputs after decoding
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        // Clear all inputs after encoding/decoding is complete
+        function clearInputs() {
+            document.getElementById('imageUpload').value = "";
+            document.getElementById('messageInput').value = "";
+            document.getElementById('passwordInput').value = "";
+            document.getElementById('passwordToggle').checked = false;
+            document.getElementById('passwordInput').style.display = "none";
+            checkInputs();
+        }
+    </script>
+</body>
+</html>
