@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SteganoSafe</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fb;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      background: linear-gradient(135deg, #4e73df, #224abe);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .nav-links a:focus {
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5') center center/cover no-repeat;
+      height: 80vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      background-attachment: fixed;
+    }
+
+    .hero-content h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero-content p {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .btn-primary, .btn-secondary {
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: #4e73df;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #2a51c4;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: #4e73df;
+      border: 2px solid #4e73df;
+    }
+
+    .btn-secondary:hover {
+      background-color: #4e73df;
+      color: white;
+    }
+
+    /* About Section */
+    .about {
+      background-color: white;
+      padding: 60px 0;
+    }
+
+    .about h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      color: #333;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+
+    .feature {
+      text-align: center;
+    }
+
+    .feature .icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .feature h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .feature p {
+      font-size: 1rem;
+      color: #777;
+    }
+
+    /* Footer Styles */
+    .footer {
+      background-color: #333;
+      color: white;
+      padding: 60px 0;
+    }
+
+    .footer .footer-content {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-section {
+      flex: 1;
+      padding: 0 20px;
+    }
+
+    .footer h3, .footer h4 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .footer ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer ul li {
+      margin: 10px 0;
+    }
+
+    .footer ul li a {
+      color: #bbb;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer ul li a:hover {
+      color: #4e73df;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .social-icons a {
+      color: #bbb;
+      text-decoration: none;
+      font-size: 1.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      color: #4e73df;
+    }
+
+    /* Form Box */
+    .form-box {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    /* File Upload */
+    .file-upload {
+      margin-bottom: 15px;
+    }
+
+    .file-upload label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .file-upload input[type="file"] {
+      display: none;
+    }
+
+    .file-upload span {
+      display: inline-block;
+      padding: 8px 12px;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .file-upload span:hover {
+      background-color: #e1e1e1;
+    }
+
+    /* Password Toggle */
+    .password-toggle {
+      display: block;
+      margin: 10px 0;
+    }
+
+    /* Buttons */
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .footer {
+      margin-top: 20px;
+      color: #777;
+      font-size: 14px;
+    }
+
+    /* Decoded Message Section */
+    .decoded-message {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .decoded-message h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .decoded-message p {
+      font-size: 1rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="brand">SteganoSafe</div>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="/register">Register</a>
+        <a href="/login">Login</a>
+        <a href="#about">About Us</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Secure Your Messages with LSB-Based Image Steganography</h1>
+      <p>Empowering privacy through cutting-edge image encoding technology</p>
+      <div class="hero-buttons">
+        <!-- <button class="btn-primary">Learn More</button>
+        <button class="btn-secondary">Get Started</button> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section id="about" class="about">
+    <div class="container">
+      <h2>Why Choose Us</h2>
+      <div class="features">
+        <div class="feature">
+          <div class="icon">🔒</div>
+          <h3>Privacy First</h3>
+          <p>Advanced encryption for complete privacy.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">🛡️</div>
+          <h3>Secure Storage</h3>
+          <p>State-of-the-art storage solutions with multiple layers of protection.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">⚡</div>
+          <h3>Fast Processing</h3>
+          <p>Lightning-fast encoding and decoding with optimal performance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>SteganoSafe</h3>
+          <p>Secure your data with confidence.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#privacy-policy">Privacy Policy</a></li>
+            <li><a href="#terms-of-service">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Connect</h4>
+          <div class="social-icons">
+            <a href="https://github.com/vivekojha02">GitHub</a>
+            <a href="#">Twitter</a>
+            <a href="https://www.linkedin.com/in/amrita-tiwari-033617293/">LinkedIn</a>
+            <a href="https://www.facebook.com/">Facebook</a>
+          </div>
+          
+          <footer style="text-align: center; padding: 10px; font-size: 14px; color: #cecdcd;">
+            &copy; 2024 Amrita Tiwari and Vivek Ojha. All Rights Reserved.
+          </footer>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

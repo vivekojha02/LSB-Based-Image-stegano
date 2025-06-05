@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encode/Decode Message</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Background Video */
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .background-video video {
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Box */
+        .form-box {
+            margin-bottom: 30px;
+        }
+
+        .form-box h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* File Upload */
+        .file-upload {
+            margin-bottom: 15px;
+        }
+
+        .file-upload label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload span {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .file-upload span:hover {
+            background-color: #e1e1e1;
+        }
+
+        /* Textarea */
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            display: block;
+            margin: 10px 0;
+        }
+
+        /* Buttons */
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Video -->
+    <div class="background-video">
+        <video autoplay muted loop id="bgVideo">
+            <source src="{{ url_for('static', filename='background.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="container">
+        <!-- Encode Section -->
+        <h1>Encode Message</h1>
+        <div class="form-box">
+            <form id="encodeForm" action="/encode" method="POST" enctype="multipart/form-data">
+                <div class="file-upload">
+                    <label for="encodeImageUpload">Upload Image</label>
+                    <input type="file" id="encodeImageUpload" name="image" accept="image/*" required>
+                    <span id="encodeFileChosen">No file chosen</span>
+                </div>
+
+                <textarea id="messageInput" name="message" placeholder="Enter your message here" required></textarea>
+
+                <label class="password-toggle">
+                    <input type="checkbox" id="encodePasswordToggle" name="passwordToggle" onchange="togglePasswordInput('encode')"> Add Password
+                </label>
+
+                <input type="password" id="encodePasswordInput" name="password" placeholder="Enter password" style="display: none;">
+
+                <button type="submit">Encode Message</button>
+            </form>
+        </div>
+
+        <!-- Decode Section -->
+        <h1>Decode Message</h1>
+        <div class="form-box">
+            <form id="decodeForm" action="/decode" method="POST" enctype="multipart/form-data">
+                <div class="file-upload">
+                    <label for="decodeImageUpload">Upload Image</label>
+                    <input type="file" id="decodeImageUpload" name="image" accept="image/*" required>
+                    <span id="decodeFileChosen">No file chosen</span>
+                </div>
+
+                <label class="password-toggle">
+                    <input type="checkbox" id="decodePasswordToggle" name="passwordToggle" onchange="togglePasswordInput('decode')"> Add Password
+                </label>
+
+                <input type="password" id="decodePasswordInput" name="password" placeholder="Enter password" style="display: none;">
+
+                <button type="submit">Decode Message</button>
+            </form>
+        </div>
+
+        <!-- Display Decoded Message -->
+        {% if decoded_message %}
+        <div class="decoded-message">
+            <h2>Decoded Message</h2>
+            <p>{{ decoded_message }}</p>
+        </div>
+        {% endif %}
+
+        <p class="footer">😎</p>
+    </div>
+
+    <script>
+        // Function to toggle password input visibility
+        function togglePasswordInput(formType) {
+            const passwordInput = document.getElementById(`${formType}PasswordInput`);
+            const passwordToggle = document.getElementById(`${formType}PasswordToggle`);
+            passwordInput.style.display = passwordToggle.checked ? 'block' : 'none';
+        }
+
+        // Update file chosen text for encode form
+        document.getElementById('encodeImageUpload').addEventListener('change', function() {
+            document.getElementById('encodeFileChosen').textContent = this.files[0].name;
+        });
+
+        // Update file chosen text for decode form
+        document.getElementById('decodeImageUpload').addEventListener('change', function() {
+            document.getElementById('decodeFileChosen').textContent = this.files[0].name;
+        });
+    </script>
+</body>
+</html>
